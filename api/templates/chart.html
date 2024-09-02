@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column */
+    grid-gap: 20px; /* Spacing between elements */
+    height: 90vh; /* Set minimum height to 100vh */
+    justify-items: center;
+    overflow: hidden;
+    padding-bottom: 40px;
+  }
+
+  .chartcontainer {
+    grid-row: 2; /* Place chart in second grid row */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85%; /* Ensure container takes up full width */
+  }
+
+  #filter-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    grid-row: 1; /* Place form in first grid row */
+    width: fit-content; /* Take full width of the container */
+    margin: 0 auto;
+    padding: 15px 20px;
+    border: 1px solid #f2ffeae6;
+    border-radius: 5px;
+    /*background-color: #0B6121;*/
+    background-image: linear-gradient(-90deg, #95c11f 44%, #006633 100%);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #filter-form img {
+    pointer-events: none;
+    height: 50px; /* Adjust logo height as needed */
+    margin-right: 40px; /* Spacing between logo and labels */
+  }
+
+  #filter-form label {
+    margin-right: 20px; /* Spacing between labels and elements */
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+  }
+
+  #filter-form select, 
+  #filter-form input[type="number"] {
+    padding: 8px 15px; /* Increased padding for more spacing */
+    border: 1px solid #f2ffeae6;
+    border-radius: 3px;
+    margin-right: 15px; /* Added margin for separation */
+  }
+
+  #filter-form button {
+    background-color: #f2ffeae6;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px;
+  }
+
+  /* Optional: Add a border to the bottom of each element for stronger separation */
+  #filter-form select, 
+  #filter-form input[type="number"] {
+    border-bottom: 1px solid #ddd; /* Light gray border for separation */
+  }
+
+
+
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <form id="filter-form">
+    <a href="https://energiecooperatievorden.nl/">
+      <img src="https://energiecooperatievorden.nl/wp-content/uploads/2021/06/Diapos_Logo_Energie_Vorden-1.png" alt="Energie Cooperatie Vorden Logo">
+    </a>  
+    <label for="interval">Interval:</label>
+    <select id="interval" name="interval">
+      <option value="maand">Maand</option>
+      <option value="dag">Dag</option>
+    </select>
+
+    <label for="jaar">Jaar:</label>
+    <input type="number" min="2000" max="2100" id="filter_jaar" name="jaar" placeholder="YYYY" disabled=True>
+
+    <label for="maand">Maand:</label>
+    <select id="filter_maand" name="maand" disabled=True>
+      <option value="">Select Maand</option>
+      <option value="1">Januari</option>
+      <option value="2">Februari</option>
+      <option value="3">Maart</option>
+      <option value="4">April</option>
+      <option value="5">Mei</option>
+      <option value="6">Juni</option>
+      <option value="7">Juli</option>
+      <option value="8">Augustus</option>
+      <option value="9">September</option>
+      <option value="10">Oktober</option>
+      <option value="11">November</option>
+      <option value="12">December</option>
+    </select>
+
+    <button type="submit">Filter</button>
+  </form>
+    
+  <div class="chartcontainer">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    function Decimal(text) {
+      text = text.trim();
+      const decimalValue = parseFloat(text);
+
+        // Check if conversion was successful (not NaN)
+      if (isNaN(decimalValue)) {
+        return null; // Or any other value to indicate error
+      }
+
+      return decimalValue;
+    }
+
+
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{dataLabel|safe}},
+        datasets: [{
+          label: 'Opgewekte Energie in kWh',
+          data: {{dataValue|safe}},
+          backgroundColor: ['#006633'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        devicePixelRatio: window.devicePixelRatio,
+        maintainAspectRatio: true,
+        layout: {
+          padding: {
+            left: 20,
+            bottom: 100,
+          },
+        },
+
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+  <script>
+
+
+
+
+  const filterForm = document.getElementById('filter-form');
+  const filterMonthSelect = document.getElementById('filter_maand');
+  const filterYearInput = document.getElementById('filter_jaar');
+
+
+
+  filterForm.addEventListener('submit', (event) => {
+    //event.preventDefault(); // Prevent default form submission
+
+    const interval = document.getElementById('interval').value;
+    const filterYear = filterYearInput.value; // Year filtering
+    const filterMonth = filterMonthSelect.value; // Month filtering
+
+    // Construct the new URL with filter parameters (modify if needed)
+    const url = new URL(window.location.href);
+
+    if (filterYear) {
+      url.searchParams.set('jaar', filterYear); 
+      filterYearInput.disabled = false; 
+    } else {
+      url.searchParams.delete('jaar'); 
+      filterYearInput.disabled = true;
+    }
+
+    if (filterMonth) {
+      url.searchParams.set('maand', filterMonth); 
+    } else {
+      url.searchParams.delete('maand');
+    }
+
+    localStorage.setItem('filter_interval', interval);
+    localStorage.setItem('filter_jaar', filterYear);
+    localStorage.setItem('filter_maand', filterMonth);
+  });
+
+  // Restore selections on page load (optional)
+  const storedInterval = localStorage.getItem('filter_interval');
+  const storedYear = localStorage.getItem('filter_jaar');
+  const storedMonth = localStorage.getItem('filter_maand');
+
+  if (storedInterval) {
+    document.getElementById('interval').value = storedInterval;
+    if (storedInterval === 'maand') {
+      filterYearInput.disabled = true;
+      filterMonthSelect.disabled = true;
+    }
+  }
+
+  if (storedInterval) {
+    document.getElementById('interval').value = storedInterval;
+  }
+
+  if (storedYear) {
+    filterYearInput.value = storedYear;
+  } else {
+    filterYearInput.value = new Date().getFullYear();
+  }
+
+  if (storedMonth) {
+    filterMonthSelect.value = storedMonth;
+  } else {
+    filterMonthSelect.value = new Date().getMonth()
+  }
+
+  function UpdateEnableState(){
+    const interval = document.getElementById('interval').value;
+    if (interval === 'maand') {
+      filterYearInput.disabled = true;
+      filterMonthSelect.disabled = true;
+    }
+
+    if (interval === 'dag') {
+      filterYearInput.disabled = false;
+      filterMonthSelect.disabled = false;
+    }
+  }
+
+  UpdateEnableState()
+
+  filterForm.addEventListener('change', (event) => { // Use 'change' event instead of 'submit'
+    UpdateEnableState()
+  })
+
+  </script>
+</body>
+
+</html>

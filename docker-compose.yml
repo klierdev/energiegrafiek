@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  django:
+     image: django-docker:0.0.1
+     build: .
+     ports:
+      - "900g0:9000"
+     environment:
+      - DEBUG=1
+      - SECRET_KEY=4832098kFS7y9834HJK3
+      - ALLOWED_HOSTS=192.168.178.90,localhost
