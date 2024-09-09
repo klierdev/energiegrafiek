@@ -1,1 +1,7 @@
+docker-compose.yml
 db.sqlite3
+.env
+Dockerfile
+__pycache__
+__pycache__/
+*.pyc

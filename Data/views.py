@@ -31,12 +31,13 @@ def UploadCSV(request):
                         extractedTijdstip = row['Tijdstip']
                         extractedWaarde = row['Waarde']
                         if extractedTijdstip is not None and extractedWaarde is not None:
-                            saveNewData, created = EnergieTerug.objects.get_or_create(
-                                Tijdstip = str(extractedTijdstip),
-                                Waarde = extractedWaarde,
-                                Maand = str(extractedTijdstip).split('-')[1],
-                                Jaartal = str(extractedTijdstip).split('-')[0],
-                            )
+                            if EnergieTerug.objects.filter(Tijdstip=extractedTijdstip).exists() == False:
+                                saveNewData, created = EnergieTerug.objects.get_or_create(
+                                    Tijdstip = str(extractedTijdstip),
+                                    Waarde = extractedWaarde,
+                                    Maand = str(extractedTijdstip).split('-')[1],
+                                    Jaartal = str(extractedTijdstip).split('-')[0],
+                                )
 
                     file.close()     
                     

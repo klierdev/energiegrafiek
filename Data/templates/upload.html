@@ -74,6 +74,12 @@
       cursor: pointer;
       margin-top: 15px;
     }
+
+    p3 {
+      color: gray;
+      font-size: 0.55rem;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -84,11 +90,11 @@
     </a>
   </header>
 
-  <h1>Upload CSV</h1>
+  <h1>Update DataBase</h1>
 
   <div class="form-container">
     <p>Hier kan je CSV bestanden uploaden voor het updaten van het database over de energie teruglevering van het zonnepark. </p>
-    <p style="padding-bottom:30px">Gebruik alleen CSV bestanden gedownload van mijn.fudura.nl en zorg dat het data alleen teruggeleverde energie is met periodes van 1 dag en niet verbruik van het park.</p>
+    <p style="padding-bottom:30px">Gebruik alleen CSV bestanden gedownload van mijn.fudura.nl. Zorg dat het data alleen teruggeleverde energie en niet verbruik van het park. Gebruik  alleen periodes van 1 dag.</p>
 
     <form method="POST" enctype="multipart/form-data" class="form-group">
       {% csrf_token %}
@@ -100,6 +106,8 @@
 
       
     </form>
+
+    <p3>Bij fouten of storingen contacteer mij marnix.vervoort@gmail.com</p3>
   </div>
 
 </body>

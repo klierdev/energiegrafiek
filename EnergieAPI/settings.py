@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os 
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY") #'django-insecure--z_2%(mtkih+e5z5i6m_suzu#zq)#_(bzm0omb)n%a45d#+f37'
+SECRET_KEY = 'sfvsefjoesjorjes' #os.environ.get("SECRET_KEY") #'django-insecure--z_2%(mtkih+e5z5i6m_suzu#zq)#_(bzm0omb)n%a45d#+f37'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") #False
+DEBUG = True #os.environ.get("DEBUG") #False
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(',') #[]
+ALLOWED_HOSTS = ['*'] #os.environ.get("ALLOWED_HOSTS").split(',') #[]
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -119,7 +120,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -129,3 +130,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / "media"
 
 LOGIN_URL = '/admin/login/'
+
+CSRF_TRUSTED_ORIGINS = ['https://energiedata.marnixtestwebsite.nl']
+
+STATIC_ROOT = BASE_DIR / 'static'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
